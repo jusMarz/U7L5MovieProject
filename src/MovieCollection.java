@@ -8,6 +8,7 @@ public class MovieCollection
 {
     private ArrayList<Movie> movies;
     private ArrayList<String> actors = new ArrayList<>(){};
+    private ArrayList<String> genres = new ArrayList<>(){};
     private Scanner scanner;
 
     public MovieCollection(String fileName)
@@ -301,8 +302,58 @@ public class MovieCollection
     }
 
 
-    private void listGenres()
-    {
+    private void listGenres() {
+        for (int i = 0; i < genres.size(); i++)
+        {
+            String genre = genres.get(i);
+
+            // this will print index 0 as choice 1 in the results list; better for user!
+            int choiceNum = i + 1;
+
+            System.out.println("" + choiceNum + ". " + genre);
+        }
+
+        System.out.println("Which genre of movies would you like too se?");
+        System.out.print("Enter number: ");
+
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+        String selectedGenre = genres.get(choice - 1);
+        ArrayList<Movie> results = new ArrayList<Movie>();
+
+        for (int i = 0; i < movies.size(); i++) {
+            String movieGenres = movies.get(i).getGenres();
+            movieGenres = movieGenres.toLowerCase();
+
+            if (movieGenres.indexOf(selectedGenre) != -1) {
+                //add the Movie objest to the results list
+                results.add(movies.get(i));
+            }
+
+            for (int a = 0; a < results.size(); a++)
+            {
+                String title = results.get(a).getTitle();
+
+                // this will print index 0 as choice 1 in the results list; better for user!
+                int choiceNum = a + 1;
+
+                System.out.println("" + choiceNum + ". " + title);
+            }
+
+            System.out.println("Which movie would you like to learn more about?");
+            System.out.print("Enter number: ");
+
+            choice = scanner.nextInt();
+            scanner.nextLine();
+
+            Movie selectedMovie = results.get(choice - 1);
+
+            displayMovieInfo(selectedMovie);
+
+            System.out.println("\n ** Press Enter to Return to Main Menu **");
+            scanner.nextLine();
+
+        }
 
     }
 
@@ -344,12 +395,22 @@ public class MovieCollection
 
                 Movie nextMovie = new Movie(title, cast, director, tagline, keywords, overview, runtime, genres, userRating, year, revenue);
                 movies.add(nextMovie);
+
                 String[] actorsInMovie = nextMovie.getCast().split("\\|");
                 for(String actor: actorsInMovie)
                 {
                     if (!(actors.contains(actor)))
                     {
                         actors.add(actor);
+                    }
+                }
+
+                String[] genresInMovie = nextMovie.getGenres().split("\\|");
+                for(String movieGenre : genresInMovie)
+                {
+                    if (!(genres.contains(movieGenre)))
+                    {
+                        this.genres.add(movieGenre);
                     }
                 }
             }
